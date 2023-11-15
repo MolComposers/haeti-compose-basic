@@ -28,7 +28,7 @@ class Scaffold : androidx.activity.ComponentActivity() {
 @Preview
 @Composable
 fun scaffold() {
-    val textValue = remember {
+    val (text, setValue) = remember {
         mutableStateOf("")
     }
 
@@ -38,10 +38,8 @@ fun scaffold() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TextField(
-            value = textValue.value,
-            onValueChange = {
-                textValue.value = it
-            },
+            value = text,
+            onValueChange = setValue,
         )
         Button(onClick = { }) {
             Text(text = "클릭!")
