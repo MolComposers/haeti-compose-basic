@@ -24,8 +24,14 @@ class MainActivity : ComponentActivity() {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+                item {
+                    Text("Header")
+                }
                 items(50) { index ->
                     Text(text = "글씨 $index")
+                }
+                item {
+                    Text("Footer")
                 }
             }
         }
