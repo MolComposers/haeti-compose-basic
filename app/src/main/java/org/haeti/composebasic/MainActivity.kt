@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
             }
 
             imageCard(
-                modifier = Modifier.fillMaxWidth(0.5f)
+                modifier = Modifier.fillMaxWidth(0.5f).height(200.dp)
                     .padding(16.dp),
                 isFovorite = isFovorite,
             ) { favorite ->
@@ -61,8 +61,9 @@ fun imageCard(
             defaultElevation = 8.dp,
         ),
     ) {
-        Box(modifier = Modifier.height(180.dp)) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Image(
+                modifier = Modifier.fillMaxSize(),
                 painter = painterResource(id = R.drawable.ic_snim),
                 contentDescription = "티뱃여우",
                 contentScale = ContentScale.Crop,
