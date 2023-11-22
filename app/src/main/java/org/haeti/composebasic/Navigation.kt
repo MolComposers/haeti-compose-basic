@@ -3,6 +3,7 @@ package org.haeti.composebasic
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -68,8 +69,31 @@ fun FirstScreen() {
 
 @Composable
 fun SecondScreen() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(text = "두 번째 화면")
+        Spacer(Modifier.height(16.dp))
+        Button(onClick = { }) {
+            Text(text = "뒤로 가기")
+        }
+    }
 }
 
 @Composable
-fun ThirdScreen() {
+fun ThirdScreen(value: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(text = "세 번째 화면")
+        Spacer(Modifier.height(16.dp))
+        Text(text = value)
+        Button(onClick = { }) {
+            Text(text = "뒤로 가기")
+        }
+    }
 }
