@@ -26,6 +26,9 @@
         <activity
             android:name=".Scaffold"
             android:exported="true" />
+        <activity
+            android:name=".Navigation"
+            android:exported="true" />
     </application>
 
 </manifest>

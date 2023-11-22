@@ -3,7 +3,6 @@ package org.haeti.composebasic
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -30,13 +30,16 @@ class Navigation : ComponentActivity() {
 
             NavHost(navController = navController, startDestination = "first") {
                 composable("first") {
-                    FirstScreen()
+                    FirstScreen(navController)
                 }
                 composable("second") {
-                    SecondScreen()
+                    SecondScreen(navController)
                 }
-                composable("third") {
-                    ThirdScreen()
+                composable("third/{value}") { backStackEntry ->
+                    ThirdScreen(
+                        navController = navController,
+                        value = backStackEntry.arguments?.getString("value") ?: "",
+                    )
                 }
             }
         }
@@ -44,7 +47,7 @@ class Navigation : ComponentActivity() {
 }
 
 @Composable
-fun FirstScreen() {
+fun FirstScreen(navController: NavController) {
     val (value, setValue) = remember {
         mutableStateOf("")
     }
@@ -56,19 +59,25 @@ fun FirstScreen() {
     ) {
         Text(text = "첫 화면")
         Spacer(Modifier.height(16.dp))
-        Button(onClick = { }) {
+        Button(onClick = {
+            navController.navigate("second")
+        }) {
             Text(text = "두 번째 화면으로")
         }
         Spacer(modifier = Modifier.height(16.dp))
         TextField(value = value, onValueChange = setValue)
-        Button(onClick = { }) {
+        Button(onClick = {
+            if (value.isNotEmpty()) {
+                navController.navigate("third/$value")
+            }
+        }) {
             Text(text = "세 번째 화면으로")
         }
     }
 }
 
 @Composable
-fun SecondScreen() {
+fun SecondScreen(navController: NavController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -76,14 +85,16 @@ fun SecondScreen() {
     ) {
         Text(text = "두 번째 화면")
         Spacer(Modifier.height(16.dp))
-        Button(onClick = { }) {
+        Button(onClick = {
+            navController.navigateUp()
+        }) {
             Text(text = "뒤로 가기")
         }
     }
 }
 
 @Composable
-fun ThirdScreen(value: String) {
+fun ThirdScreen(navController: NavController, value: String) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -92,7 +103,9 @@ fun ThirdScreen(value: String) {
         Text(text = "세 번째 화면")
         Spacer(Modifier.height(16.dp))
         Text(text = value)
-        Button(onClick = { }) {
+        Button(onClick = {
+            navController.navigateUp()
+        }) {
             Text(text = "뒤로 가기")
         }
     }
