@@ -29,6 +29,9 @@
         <activity
             android:name=".Navigation"
             android:exported="true" />
+        <activity
+            android:name=".PracticeViewModel"
+            android:exported="true" />
     </application>
 
 </manifest>
