@@ -9,9 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -39,6 +42,8 @@ fun HomeScreen(viewModel: StateViewModel = viewModel()) {
         mutableStateOf("Hello world")
     }
 
+    val text3: State<String> = viewModel.liveData.observeAsState("Hello world")
+
     Column() {
         Text("Hello World")
         Button(onClick = {
@@ -52,6 +57,9 @@ fun HomeScreen(viewModel: StateViewModel = viewModel()) {
 class StateViewModel : ViewModel() {
     private val _value = mutableStateOf("Hello World")
     val value: State<String> = _value
+
+    private val _liveData = MutableLiveData<String>()
+    val liveData: LiveData<String> = _liveData
 
     fun changeValue(value: String) {
         _value.value = value
