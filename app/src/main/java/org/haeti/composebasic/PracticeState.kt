@@ -41,7 +41,9 @@ fun HomeScreen(viewModel: StateViewModel = viewModel()) {
 
     Column() {
         Text("Hello World")
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            viewModel.changeValue("변경")
+        }) {
             Text(text = "클릭")
         }
     }
@@ -50,4 +52,8 @@ fun HomeScreen(viewModel: StateViewModel = viewModel()) {
 class StateViewModel : ViewModel() {
     private val _value = mutableStateOf("Hello World")
     val value: State<String> = _value
+
+    fun changeValue(value: String) {
+        _value.value = value
+    }
 }
