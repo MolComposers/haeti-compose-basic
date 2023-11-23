@@ -8,7 +8,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -24,6 +27,18 @@ class PracticeState : ComponentActivity() {
 
 @Composable
 fun HomeScreen(viewModel: StateViewModel = viewModel()) {
+    val text1 = remember {
+        mutableStateOf("Hello world")
+    }
+
+    var text2 by remember {
+        mutableStateOf("Hello world")
+    }
+
+    val (text, setText) = remember {
+        mutableStateOf("Hello world")
+    }
+
     Column() {
         Text("Hello World")
         Button(onClick = { /*TODO*/ }) {
