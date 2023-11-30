@@ -53,7 +53,7 @@ fun HomeScreen() {
         },
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(it).padding(16.dp),
         ) {
             OutlinedTextField(
                 value = height,
