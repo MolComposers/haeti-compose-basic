@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,8 +15,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     HomeScreen(navController = navController)
                 }
                 composable(route = "Result") {
-                    ResultScreen(bmi = 35.0)
+                    ResultScreen(navController = navController, bmi = 35.0)
                 }
             }
         }
@@ -105,11 +109,20 @@ fun HomeScreen(navController: NavController) {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResultScreen(bmi: Double) {
+fun ResultScreen(navController: NavController, bmi: Double) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "비만도 계산기") },
+                navigationIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = null,
+                        modifier = Modifier.clickable {
+                            navController.popBackStack()
+                        },
+                    )
+                },
             )
         },
     ) {
