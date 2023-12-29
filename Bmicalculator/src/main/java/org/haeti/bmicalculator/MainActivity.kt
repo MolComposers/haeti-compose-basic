@@ -144,9 +144,3 @@ fun ResultScreen(navController: NavController, bmi: Double) {
         }
     }
 }
-
-// @Preview
-// @Composable
-// fun Preview() {
-//    ResultScreen(bmi = 35.0)
-// }
