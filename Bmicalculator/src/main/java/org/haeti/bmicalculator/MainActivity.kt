@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,13 +45,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val bmiViewModel = viewModel<BmiViewModel>()
             val navController = rememberNavController()
+
+            val bmi = bmiViewModel.bmi.value
+
             NavHost(navController = navController, startDestination = "Home") {
                 composable(route = "Home") {
-                    HomeScreen(navController = navController)
+                    HomeScreen() { height, weight ->
+                        bmiViewModel.calculateBmi(height, weight)
+                        navController.navigate("Result")
+                    }
                 }
                 composable(route = "Result") {
-                    ResultScreen(navController = navController, bmi = 35.0)
+                    ResultScreen(navController = navController, bmi = bmi)
                 }
             }
         }
@@ -60,7 +68,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(onResultClicked: (Double, Double) -> Unit) {
     val (height, setHeight) = rememberSaveable {
         mutableStateOf("")
     }
@@ -96,7 +104,9 @@ fun HomeScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
             Button(
                 onClick = {
-                    navController.navigate("Result")
+                    if (height.isNotEmpty() && weight.isNotEmpty()) {
+                        onResultClicked(height.toDouble(), weight.toDouble())
+                    }
                 },
                 modifier = Modifier.align(Alignment.End),
             ) {
@@ -110,6 +120,21 @@ fun HomeScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultScreen(navController: NavController, bmi: Double) {
+    val text = when {
+        bmi >= 35 -> "고도 비만"
+        bmi >= 30 -> "2단계 비만"
+        bmi >= 25 -> "1단계 비만"
+        bmi >= 23 -> "과체중"
+        bmi >= 18.5 -> "정상"
+        else -> "저체중"
+    }
+
+    val imageRes = when {
+        bmi >= 23 -> R.drawable.baseline_sentiment_very_dissatisfied_24
+        bmi >= 18.5 -> R.drawable.baseline_sentiment_dissatisfied_24
+        else -> R.drawable.baseline_sentiment_satisfied_24
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -131,10 +156,10 @@ fun ResultScreen(navController: NavController, bmi: Double) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "과체중", fontSize = 30.sp)
+            Text(text = text, fontSize = 30.sp)
             Spacer(modifier = Modifier.height(50.dp))
             Image(
-                painter = painterResource(id = R.drawable.baseline_sentiment_dissatisfied_24),
+                painter = painterResource(id = imageRes),
                 contentDescription = null,
                 modifier = Modifier.size(100.dp),
                 colorFilter = ColorFilter.tint(
