@@ -29,15 +29,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HomeScreen()
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "Home") {
+                composable(route = "Home") {
+                    HomeScreen(navController = navController)
+                }
+                composable(route = "Result") {
+                    ResultScreen(bmi = 35.0)
+                }
+            }
         }
     }
 }
@@ -45,7 +56,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val (height, setHeight) = rememberSaveable {
         mutableStateOf("")
     }
@@ -80,7 +91,9 @@ fun HomeScreen() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = {},
+                onClick = {
+                    navController.navigate("Result")
+                },
                 modifier = Modifier.align(Alignment.End),
             ) {
                 Text("결과")
@@ -119,8 +132,8 @@ fun ResultScreen(bmi: Double) {
     }
 }
 
-@Preview
-@Composable
-fun Preview() {
-    ResultScreen(bmi = 35.0)
-}
+// @Preview
+// @Composable
+// fun Preview() {
+//    ResultScreen(bmi = 35.0)
+// }
