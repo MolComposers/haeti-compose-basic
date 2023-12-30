@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Timer
 import kotlin.concurrent.timer
 
@@ -37,6 +38,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel = viewModel<MainViewModel>()
+
+            val sec = viewModel.sec.value
+            val milliSec = viewModel.milliSec.value
+            val isRunning = viewModel.isRunning.value
+            val lapTimes = viewModel.lapTimes.value
+
+            MainScreen(
+                sec = sec,
+                milliSec = milliSec,
+                isRunning = isRunning,
+                lapTimes = lapTimes,
+                onToggle = {
+                    if (it) {
+                        viewModel.pause()
+                    } else {
+                        viewModel.start()
+                    }
+                },
+                onReset = { viewModel.reset() },
+                onLapTime = { viewModel.recordLapTime() },
+            )
         }
     }
 }
