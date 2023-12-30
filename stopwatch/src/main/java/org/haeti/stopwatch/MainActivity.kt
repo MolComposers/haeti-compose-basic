@@ -7,6 +7,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import java.util.Timer
+import kotlin.concurrent.timer
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,17 +31,40 @@ class MainViewModel : ViewModel() {
     private val _milliSec = mutableStateOf(0)
     val milliSec: State<Int> = _milliSec
 
-    private val lap = 1
+    private val _lapTimes = mutableStateOf(mutableListOf<String>())
+    val lapTimes: State<List<String>> = _lapTimes
+
+    private var lap = 1
 
     fun start() {
+        _isRunning.value = true
+
+        timerTask = timer(period = 10) {
+            time++
+            _sec.value = time / 100
+            _milliSec.value = time % 100
+        }
     }
 
     fun pause() {
+        _isRunning.value = false
+        timerTask?.cancel()
     }
 
     fun reset() {
+        timerTask?.cancel()
+
+        time = 0
+        _isRunning.value = false
+        _sec.value = 0
+        _milliSec.value = 0
+
+        _lapTimes.value.clear()
+        lap = 1
     }
 
     fun recordLapTime() {
+        _lapTimes.value.add(0, "$lap LAP: ${sec.value}.${milliSec.value}")
+        lap++
     }
 }
