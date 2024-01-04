@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.haeti.stopwatch.ui.theme.ComposeBasicTheme
 import java.util.Timer
 import kotlin.concurrent.timer
 
@@ -38,28 +40,30 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewModel = viewModel<MainViewModel>()
+            ComposeBasicTheme(darkTheme = false) {
+                val viewModel = viewModel<MainViewModel>()
 
-            val sec = viewModel.sec.value
-            val milliSec = viewModel.milliSec.value
-            val isRunning = viewModel.isRunning.value
-            val lapTimes = viewModel.lapTimes.value
+                val sec = viewModel.sec.value
+                val milliSec = viewModel.milliSec.value
+                val isRunning = viewModel.isRunning.value
+                val lapTimes = viewModel.lapTimes.value
 
-            MainScreen(
-                sec = sec,
-                milliSec = milliSec,
-                isRunning = isRunning,
-                lapTimes = lapTimes,
-                onToggle = {
-                    if (it) {
-                        viewModel.pause()
-                    } else {
-                        viewModel.start()
-                    }
-                },
-                onReset = { viewModel.reset() },
-                onLapTime = { viewModel.recordLapTime() },
-            )
+                MainScreen(
+                    sec = sec,
+                    milliSec = milliSec,
+                    isRunning = isRunning,
+                    lapTimes = lapTimes,
+                    onToggle = {
+                        if (it) {
+                            viewModel.pause()
+                        } else {
+                            viewModel.start()
+                        }
+                    },
+                    onReset = { viewModel.reset() },
+                    onLapTime = { viewModel.recordLapTime() },
+                )
+            }
         }
     }
 }
@@ -163,35 +167,50 @@ fun MainScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                FloatingActionButton(
-                    onClick = { onReset() },
-                    containerColor = androidx.compose.ui.graphics.Color.Red,
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterStart,
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
-                        contentDescription = "reset",
-                    )
+                    FloatingActionButton(
+                        onClick = { onReset() },
+                        containerColor = androidx.compose.ui.graphics.Color.Red,
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
+                            contentDescription = "reset",
+                        )
+                    }
                 }
 
-                FloatingActionButton(
-                    onClick = { onToggle(isRunning) },
-                    containerColor = androidx.compose.ui.graphics.Color.Green,
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Image(
-                        painter = painterResource(
-                            id =
-                            if (isRunning) {
-                                R.drawable.ic_baseline_pause_24
-                            } else {
-                                R.drawable.ic_baseline_play_arrow_24
-                            },
-                        ),
-                        contentDescription = "start/pause",
-                    )
+                    FloatingActionButton(
+                        onClick = { onToggle(isRunning) },
+                        containerColor = androidx.compose.ui.graphics.Color.Green,
+                    ) {
+                        Image(
+                            painter = painterResource(
+                                id =
+                                if (isRunning) {
+                                    R.drawable.ic_baseline_pause_24
+                                } else {
+                                    R.drawable.ic_baseline_play_arrow_24
+                                },
+                            ),
+                            contentDescription = "start/pause",
+                        )
+                    }
                 }
 
-                Button(onClick = { onLapTime() }) {
-                    Text("랩 타임")
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterEnd,
+                ) {
+                    Button(onClick = { onLapTime() }) {
+                        Text("랩 타임")
+                    }
                 }
             }
         }
