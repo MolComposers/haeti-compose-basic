@@ -16,3 +16,4 @@ rootProject.name = "Compose Basic"
 include ':app'
 include ':Bmicalculator'
 include ':stopwatch'
+include ':mywebbrowser'
