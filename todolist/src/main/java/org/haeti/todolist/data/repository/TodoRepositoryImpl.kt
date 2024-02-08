@@ -9,10 +9,7 @@ import org.haeti.todolist.domain.repository.TodoRepository
 
 class TodoRepositoryImpl(application: Application) : TodoRepository {
 
-    private val db = Room.databaseBuilder(
-        application,
-        TodoDatabase::class.java, "todo-db"
-    ).build()
+    private val db = TodoDatabase.getInstance(application.applicationContext)!!
 
     override fun collectTodos(): Flow<List<Todo>> = db.getTodoDao().getTodos()
 
