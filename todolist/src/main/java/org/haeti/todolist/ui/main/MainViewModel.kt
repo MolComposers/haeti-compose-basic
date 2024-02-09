@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.haeti.todolist.domain.model.Todo
 import org.haeti.todolist.domain.repository.TodoRepository
@@ -18,6 +19,14 @@ class MainViewModel(
     val items: State<List<Todo>> = _items
 
     private var recentlyDeletedTodo: Todo? = null
+
+    init {
+        viewModelScope.launch {
+            todoRepository.collectTodos().collect { todos ->
+                _items.value = todos
+            }
+        }
+    }
 
     fun addTodo(text: String) {
         viewModelScope.launch {
@@ -53,7 +62,7 @@ class MainViewModel(
             recentlyDeletedTodo?.let {
                 todoRepository.addTodo(it)
                 recentlyDeletedTodo = null
-            } ?: return@launch
+            }
         }
     }
 }
