@@ -17,6 +17,8 @@ class MainViewModel(
     private val _items = mutableStateOf(emptyList<Todo>())
     val items: State<List<Todo>> = _items
 
+    private var recentlyDeletedTodo: Todo? = null
+
     fun addTodo(text: String) {
         viewModelScope.launch {
             todoRepository.addTodo(Todo(title = text))
@@ -41,7 +43,17 @@ class MainViewModel(
         todo?.let {
             viewModelScope.launch {
                 todoRepository.deleteTodo(it)
+                recentlyDeletedTodo = it
             }
+        }
+    }
+
+    fun restoreTodo() {
+        viewModelScope.launch {
+            recentlyDeletedTodo?.let {
+                todoRepository.addTodo(it)
+                recentlyDeletedTodo = null
+            } ?: return@launch
         }
     }
 }
