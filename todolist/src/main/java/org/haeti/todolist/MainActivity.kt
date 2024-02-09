@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.haeti.todolist.domain.util.TodoAndroidViewModelFactory
+import org.haeti.todolist.ui.main.MainScreen
 import org.haeti.todolist.ui.main.MainViewModel
 import org.haeti.todolist.ui.theme.ComposeBasicTheme
 
@@ -22,6 +23,8 @@ class MainActivity : ComponentActivity() {
             val viewModel: MainViewModel = viewModel(
                 factory = TodoAndroidViewModelFactory(application)
             )
+
+            MainScreen(viewModel = viewModel)
         }
     }
 }
