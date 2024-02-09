@@ -17,5 +17,5 @@ data class Todo(
     val isDone: Boolean = false
 ) {
     @PrimaryKey(autoGenerate = true)
-    var uniqueId: Int = -1
+    var uniqueId: Int = 0
 }
